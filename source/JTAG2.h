@@ -107,9 +107,9 @@ enum mem_type {
 // *** STK500 packet ***
 constexpr uint8_t MESSAGE_START = 0x1B;
 constexpr int MAX_BODY_SIZE = 450;				// Note: should not be reduced to less than 300 bytes.
-union packet_t {
+union __attribute__((packed)) packet_t {
   uint8_t raw[6 + MAX_BODY_SIZE];
-  struct {
+  struct __attribute__((packed))  {
     union {
       uint16_t number;
       uint8_t number_byte[2];

@@ -18,21 +18,23 @@ uint16_t baud_tbl[8] = {baud(2400), baud(4800), baud(9600), baud(19200), baud(38
 
 // Functions
 uint8_t JICE_io::put(char c) {
-  Serial.write(c);
+  SERIALCOM.write(c);
   return c;
 }
 
 uint8_t JICE_io::get(void) {
-  while (!Serial.available());
-  return Serial.read();
+  while (!SERIALCOM.available());
+  uint8_t c = SERIALCOM.read();
+  return c;
 }
 
 void JICE_io::init(void) {
+  SERIALCOM.begin(115200);
   Serial.begin(115200);
 }
 
 void JICE_io::flush(void) {
-  Serial.flush();
+  SERIALCOM.flush();
 }
 
 void JICE_io::set_baud(JTAG2::baud_rate rate) {

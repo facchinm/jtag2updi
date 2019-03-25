@@ -5,6 +5,7 @@
     Author: JMR_2
 */
 
+#include "Arduino.h"
 #include "JTAG2.h"
 #include "JICE_io.h"
 #include "NVM.h"
