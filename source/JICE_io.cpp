@@ -23,7 +23,7 @@ uint8_t JICE_io::put(char c) {
 }
 
 uint8_t JICE_io::get(void) {
-  while (!SERIALCOM.available());
+  //while (!SERIALCOM.available());
   uint8_t c = SERIALCOM.read();
   return c;
 }

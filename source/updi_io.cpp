@@ -15,7 +15,9 @@
 uint8_t UPDI_io::put(char c) {
   Serial1.write(c);
   Serial1.flush();
-  delayMicroseconds(10);
+  delayMicroseconds(50);
+  long start = millis();
+  while (!Serial1.available() && millis() - start < 20) {}
   char d = Serial1.read();
   if (c != d) {
     // Serial.println("echo failed! " + String(d, HEX));
@@ -46,17 +48,21 @@ uint8_t UPDI_io::put(ctrl c)
   while (Serial1.available()) {
     Serial1.read();
   }
-  Serial1.begin(230400, SERIAL_8E2);
+  Serial1.begin(115200, SERIAL_8E2);
   return 0;
 }
 
 uint8_t UPDI_io::get() {
   uint8_t c;
   while (!Serial1.available()) {}
-  return Serial1.read();;
+  c = Serial1.read();
+  delayMicroseconds(10);
+  //Serial.println("get! " + String(c, HEX));
+  return c;
 }
 
 void UPDI_io::init(void)
 {
-  Serial1.begin(230400, SERIAL_8E2);
+  Serial1.begin(115200, SERIAL_8E2);
+  //Serial.begin(115200);
 }
