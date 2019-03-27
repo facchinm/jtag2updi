@@ -36,13 +36,20 @@ bool JTAG2::receive() {
   for (uint16_t i = 0; i < 6; i++) {
     crc = CRC::next(packet.raw[i] = JICE_io::get(), crc);
   }
-  if (packet.size_word[0] > sizeof(packet.body)) return false;
-  if (JICE_io::get() != TOKEN) return false;
+  if (packet.size_word[0] > sizeof(packet.body)) {
+    return false;
+  }
+  if (JICE_io::get() != TOKEN) {
+    return false;
+  }
   crc = CRC::next(TOKEN, crc);
-  for (uint16_t i = 0; i < packet.size_word[0]; i++) {
+  for (uint16_t i = 0; i < packet.size; i++) {
     crc = CRC::next(packet.body[i] = JICE_io::get(), crc);
   }
-  if ((uint16_t)(JICE_io::get() | (JICE_io::get() << 8)) != crc) return false;
+  uint16_t packet_crc = (JICE_io::get() | ((uint16_t)JICE_io::get() << 8));
+  if (packet_crc != crc) {
+    return false;
+  }
   return true;
 }
 
@@ -86,7 +93,8 @@ void JTAG2::sign_on() {
   JTAG2::PARAM_BAUD_RATE_VAL = JTAG2::baud_19200;
   /* Initialize or enable UPDI */
   UPDI_io::put(UPDI_io::double_break);
-  UPDI::stcs(UPDI::reg::Control_A, 6);
+  UPDI::stcs(UPDI::reg::Control_B, 8);
+  UPDI::stcs(UPDI::reg::Control_A, 0x80);
   // Send sign on message
   packet.size_word[0] = sizeof(sgn_resp);
   for (uint8_t i = 0; i < sizeof(sgn_resp); i++) {

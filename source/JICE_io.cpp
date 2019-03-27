@@ -30,7 +30,6 @@ uint8_t JICE_io::get(void) {
 
 void JICE_io::init(void) {
   SERIALCOM.begin(115200);
-  Serial.begin(115200);
 }
 
 void JICE_io::flush(void) {
